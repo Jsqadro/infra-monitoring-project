@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-scripts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Syntax check — check_api.sh
+        run: bash -n check_api.sh
+
+      - name: Syntax check — analyze_logs.sh
+        run: bash -n analyze_logs.sh
+
+      - name: Test check_api.sh (expect exit code 0)
+        run: ./check_api.sh https://httpbin.org/status/200
+
+      - name: Negative test (expect exit code 1)
+        run: |
+          set +e
+          ./check_api.sh https://httpbin.org/status/500
+          rc=$?
+          if [ "$rc" -ne 1 ]; then
+            echo "Expected exit code 1, got $rc"
+            exit 1
+          fi
+
+      - name: Test analyze_logs.sh
+        run: |
+          ./analyze_logs.sh > output.txt
+          cat output.txt
+          grep -q "Общее количество запросов" output.txt
+          grep -q "Топ-3 IP" output.txt
