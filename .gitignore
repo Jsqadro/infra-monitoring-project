@@ -1,0 +1,29 @@
+# Логи
+*.log
+logs/
+access.log
+
+# Дампы трафика (артефакты анализа)
+*.pcap
+*.pcapng
+
+# Временные файлы и артефакты сборки
+*.tmp
+*.bak
+*.swp
+tmp/
+build/
+dist/
+
+# Docker
+.docker/
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Секреты и SSH-ключи
+*.pem
+*.key
+id_rsa*
+.env
